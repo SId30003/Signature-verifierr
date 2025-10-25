@@ -28,7 +28,7 @@ export default function Home() {
       const buffer = Buffer.from(arrayBuffer);
 
       const response = await axiosInstance.post(
-        "/analyze",
+        "v1/analyze",
         {
           image: buffer.toString("base64"),
           filename: selectedImage.name,

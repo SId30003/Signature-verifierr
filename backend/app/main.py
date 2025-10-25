@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from app.core.cors import setup_cors
 from app.core.config import settings
-from app.routers import  analyze
+from app.routers import analyze
 
 app = FastAPI(title="Python API", version="0.1.0")
 setup_cors(app, settings.ALLOWED_ORIGINS)
 
-# app.include_router(analyze.router)
+app.include_router(analyze.router)
+
 
 @app.get("/")
 def root():
