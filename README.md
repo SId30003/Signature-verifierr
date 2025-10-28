@@ -1,45 +1,45 @@
-Signature Verification System
+# Signature Verification System
+
 A machine learning-based signature verification system that identifies whether a signature is genuine or forged by analyzing uploaded signature images.
-📋 Project Overview
+
+## 📋 Project Overview
+
 This project was developed as a 5th semester Machine Learning project. The system uses ML algorithms to authenticate signatures by comparing them against known genuine samples, trained on the CEDAR signature dataset.
-🎯 Features
 
-Signature Authentication: Upload signature images to verify authenticity
-Binary Classification: Determines if a signature is genuine or forged
-Multiple ML Models: Ensemble approach using various classification algorithms
-Real-time Analysis: Quick processing and result generation
-User-friendly Interface: Clean and intuitive web interface
-RESTful API: Well-structured backend API for signature analysis
+## 🎯 Features
 
-🛠️ Tech Stack
-Backend
+- **Signature Authentication**: Upload signature images to verify authenticity
+- **Binary Classification**: Determines if a signature is genuine or forged
+- **Multiple ML Models**: Ensemble approach using various classification algorithms
+- **Real-time Analysis**: Quick processing and result generation
+- **User-friendly Interface**: Clean and intuitive web interface
+- **RESTful API**: Well-structured backend API for signature analysis
 
-Framework: FastAPI (Python)
-ML Models:
+## 🛠️ Tech Stack
 
-Logistic Regression
-Support Vector Machine (SVM with RBF kernel)
-Decision Tree Classifier
-Stochastic Gradient Descent (SGD) Classifier
+### Backend
 
+- **Framework**: FastAPI (Python)
+- **ML Models**:
+  - Logistic Regression
+  - Support Vector Machine (SVM with RBF kernel)
+  - Decision Tree Classifier
+  - Stochastic Gradient Descent (SGD) Classifier
+- **Model Serialization**: Joblib
+- **Core Libraries**:
+  - scikit-learn for ML algorithms
+  - FastAPI for API endpoints
+  - CORS middleware for frontend integration
 
-Model Serialization: Joblib
-Core Libraries:
+### Frontend
 
-scikit-learn for ML algorithms
-FastAPI for API endpoints
-CORS middleware for frontend integration
+- **Framework**: Next.js
+- **Styling**: CSS/Tailwind (based on globals.css)
+- **Components**: React-based modular components
+- **Features**: Image upload, result display, navigation
 
-
-
-Frontend
-
-Framework: Next.js
-Styling: CSS/Tailwind (based on globals.css)
-Components: React-based modular components
-Features: Image upload, result display, navigation
-
-📁 Project Structure
+## 📁 Project Structure
+```
 project-root/
 ├── frontend/
 │   ├── .next/
@@ -88,100 +88,120 @@ project-root/
     ├── model.joblib
     ├── .gitignore
     └── requirements.txt
-🚀 Getting Started
-Prerequisites
+```
 
-Python 3.8+
-Node.js 16+
-npm or yarn
+## 🚀 Getting Started
 
-Backend Setup
+### Prerequisites
 
-Navigate to the backend directory:
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
 
-bashcd backend
+### Backend Setup
 
-Install Python dependencies:
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
 
-bashpip install -r requirements.txt
+2. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-Run the backend server:
-
-bashpython -m app.main
+3. Run the backend server:
+```bash
+python -m app.main
+```
 The API will be available at http://localhost:8000
-Frontend Setup
 
-Navigate to the frontend directory:
+### Frontend Setup
 
-bashcd frontend
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
 
-Install Node dependencies:
+2. Install Node dependencies:
+```bash
+npm install
+```
 
-bashnpm install
-
-Run the development server:
-
-bashnpm run dev
+3. Run the development server:
+```bash
+npm run dev
+```
 The application will be available at http://localhost:3000
-📊 Model Training
-Dataset
+
+## 📊 Model Training
+
+### Dataset
+
 The system was trained on the CEDAR Signature Dataset from Kaggle, which contains:
+- Genuine signatures from multiple individuals
+- Forged signatures for comparison
+- High-quality signature images for robust training
 
-Genuine signatures from multiple individuals
-Forged signatures for comparison
-High-quality signature images for robust training
+### Machine Learning Models
 
-Machine Learning Models
 We implemented and compared multiple classification algorithms:
-pythonmodels = {
+```python
+models = {
     "LogisticRegression": LogisticRegression(max_iter=2000, class_weight='balanced'),
     "SVM": SVC(kernel='rbf', probability=True, class_weight='balanced'),
     "DecisionTree": DecisionTreeClassifier(max_depth=10, class_weight='balanced'),
     "SGDClassifier": SGDClassifier(loss='log_loss', max_iter=1000, class_weight='balanced')
 }
-Model Configuration
+```
 
-Logistic Regression: Maximum 2000 iterations with balanced class weights
-SVM: RBF kernel with probability estimates and balanced class weights
-Decision Tree: Maximum depth of 10 with balanced class weights
-SGD Classifier: Log loss function with 1000 iterations and balanced class weights
+### Model Configuration
 
-Training Process
+- **Logistic Regression**: Maximum 2000 iterations with balanced class weights
+- **SVM**: RBF kernel with probability estimates and balanced class weights
+- **Decision Tree**: Maximum depth of 10 with balanced class weights
+- **SGD Classifier**: Log loss function with 1000 iterations and balanced class weights
 
-Data Collection: CEDAR dataset from Kaggle
-Preprocessing: Image normalization and feature extraction (src/preprocess.py)
-Feature Engineering: Custom feature extraction pipeline (src/features.py)
-Model Training: Trained using Google Colab for computational efficiency
-Model Evaluation: Cross-validation and performance metrics comparison
-Model Selection: Best performing model saved as model.joblib
+### Training Process
 
-🔍 How It Works
+1. **Data Collection**: CEDAR dataset from Kaggle
+2. **Preprocessing**: Image normalization and feature extraction (src/preprocess.py)
+3. **Feature Engineering**: Custom feature extraction pipeline (src/features.py)
+4. **Model Training**: Trained using Google Colab for computational efficiency
+5. **Model Evaluation**: Cross-validation and performance metrics comparison
+6. **Model Selection**: Best performing model saved as model.joblib
 
-Upload: User uploads a signature image through the web interface
-Preprocessing: Image is preprocessed and normalized
-Feature Extraction: Key signature features are extracted
-Analysis: ML model analyzes the signature features
-Classification: System determines if signature is genuine or forged
-Results: User receives authentication result with confidence score
+## 🔍 How It Works
 
-📝 API Documentation
+1. **Upload**: User uploads a signature image through the web interface
+2. **Preprocessing**: Image is preprocessed and normalized
+3. **Feature Extraction**: Key signature features are extracted
+4. **Analysis**: ML model analyzes the signature features
+5. **Classification**: System determines if signature is genuine or forged
+6. **Results**: User receives authentication result with confidence score
+
+## 📝 API Documentation
+
 Once the backend is running, visit http://localhost:8000/docs for interactive API documentation powered by FastAPI's built-in Swagger UI.
-Main Endpoints
 
-POST /analyze: Upload and analyze signature image
-GET /health: Check API health status
+### Main Endpoints
 
+- **POST /analyze**: Upload and analyze signature image
+- **GET /health**: Check API health status
 
-📄 License
+## 📄 License
+
 This project was developed for academic purposes as part of the 5th semester ML curriculum.
 
-🙏 Acknowledgments
-Vikas Gupta Sir and Pravin Dwaramwar sir for their guidance. CEDAR Dataset contributors for providing high-quality signature data
-Kaggle for hosting the dataset
+##  Acknowledgments
 
-📚 References
+- Vikas Gupta Sir and Pravin Dwaramwar sir for their guidance
+- CEDAR Dataset contributors for providing high-quality signature data
+- Kaggle for hosting the dataset
 
-CEDAR Signature Dataset: Kaggle
-FastAPI Documentation: https://fastapi.tiangolo.com/
-Next.js Documentation: https://nextjs.org/docs
-scikit-learn Documentation: https://scikit-learn.org/
+## 📚 References
+
+- CEDAR Signature Dataset: [Kaggle](https://www.kaggle.com/)
+- FastAPI Documentation: https://fastapi.tiangolo.com/
+- Next.js Documentation: https://nextjs.org/docs
+- scikit-learn Documentation: https://scikit-learn.org/
