@@ -8,31 +8,50 @@ import ResultDisplay from "@/components/ResultDisplay";
 import { axiosInstance } from "@/lib/axios";
 
 export default function Home() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [selectedImages, setSelectedImages] = useState({
+    original: null,
+    current: null,
+  });
+  const [previewUrls, setPreviewUrls] = useState({
+    original: null,
+    current: null,
+  });
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleImageSelect = (file) => {
-    setSelectedImage(file);
-    setPreviewUrl(URL.createObjectURL(file));
+  const handleImageSelect = (file, imageType) => {
+    setSelectedImages((prev) => ({
+      ...prev,
+      [imageType]: file,
+    }));
+    setPreviewUrls((prev) => ({
+      ...prev,
+      [imageType]: URL.createObjectURL(file),
+    }));
     setResult(null);
   };
 
   const handleAnalyze = async () => {
-    if (!selectedImage) return;
+    if (!selectedImages.original || !selectedImages.current) return;
 
     setIsLoading(true);
     try {
-      const arrayBuffer = await selectedImage.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
+      // Convert both images to base64
+      const originalArrayBuffer = await selectedImages.original.arrayBuffer();
+      const originalBuffer = Buffer.from(originalArrayBuffer);
+
+      const currentArrayBuffer = await selectedImages.current.arrayBuffer();
+      const currentBuffer = Buffer.from(currentArrayBuffer);
 
       const response = await axiosInstance.post(
         "v1/analyze",
         {
-          image: buffer.toString("base64"),
-          filename: selectedImage.name,
-          mimetype: selectedImage.type,
+          originalImage: originalBuffer.toString("base64"),
+          currentImage: currentBuffer.toString("base64"),
+          originalFilename: selectedImages.original.name,
+          currentFilename: selectedImages.current.name,
+          originalMimetype: selectedImages.original.type,
+          currentMimetype: selectedImages.current.type,
         },
         {
           headers: {
@@ -43,11 +62,11 @@ export default function Home() {
 
       setResult(response.data);
     } catch (error) {
-      console.error("Error analyzing signature:", error);
+      console.error("Error comparing signatures:", error);
       setResult({
         error:
           error.response?.data?.detail ||
-          "Failed to analyze signature. Please try again.",
+          "Failed to compare signatures. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -55,8 +74,12 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setSelectedImage(null);
-    setPreviewUrl(null);
+    // Revoke object URLs to prevent memory leaks
+    if (previewUrls.original) URL.revokeObjectURL(previewUrls.original);
+    if (previewUrls.current) URL.revokeObjectURL(previewUrls.current);
+
+    setSelectedImages({ original: null, current: null });
+    setPreviewUrls({ original: null, current: null });
     setResult(null);
   };
 
@@ -70,13 +93,14 @@ export default function Home() {
               Signature Authentication System
             </h1>
             <p className="text-lg text-[#EDEDED]/70 max-w-2xl mx-auto leading-relaxed">
-              Upload a signature image and our ML model will determine if it is
-              authentic or forged with confidence analysis
+              Upload your original signature and current signature for
+              comparison. Our ML model will analyze and determine if they match
+              with confidence analysis
             </p>
           </div>
           <ImageUpload
             onImageSelect={handleImageSelect}
-            previewUrl={previewUrl}
+            previewUrls={previewUrls}
             onAnalyze={handleAnalyze}
             onReset={handleReset}
             isLoading={isLoading}
